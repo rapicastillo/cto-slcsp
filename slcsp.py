@@ -1,12 +1,17 @@
 import csv
 
 
+PLANS_CSV = './plans.csv'
+ZIPCODE_CSV = './zips.csv'
+SLCSP_CSV = './slcsp.csv'
+RESULTS_CSV = './slcsp_results.csv'
+
 # First step is to process the slcsp for each rate_area
 # storing them in a dict with keys of rate area to list of the lowest two rates
 # which will be updated as we go through plans csv
 def get_slcsp_per_rate_area():
     slcsp_list = dict()
-    with open('./plans.csv') as csv_file:
+    with open(PLANS_CSV) as csv_file:
 
         csv_reader = csv.reader(csv_file, delimiter=',')
         next(csv_reader) # skip head
@@ -42,7 +47,7 @@ def get_slcsp_per_rate_area():
 # This processes the zips.csv file and assigns all the rate areas allocated to a zip
 def get_rate_area_zip():
     zip_list = dict()
-    with open('./zips.csv') as csv_file:
+    with open(ZIPCODE_CSV) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         next(csv_reader) # skip head
         for row in csv_reader:
@@ -62,7 +67,7 @@ def get_rate_area_zip():
 # This method makes the actual matching of zipcode and geetting the second lowest rate for an arae
 def get_slcsp(slcsp_list, zip_list):
     zip_results = []
-    with open('./slcsp.csv') as csv_file:
+    with open(SLCSP_CSV) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         next(csv_reader) # skip head
         for row in csv_reader:
@@ -72,7 +77,6 @@ def get_slcsp(slcsp_list, zip_list):
                 if len(rate_areas) == 1:
                     rate_area = rate_areas[0]
                     if rate_area in slcsp_list:
-                        # get second
                         zip_results.append(dict(
                           zipcode=zipcode,
                           rate=slcsp_list[rate_area][1] if len(slcsp_list[rate_area]) > 1 else None 
@@ -92,7 +96,7 @@ def get_slcsp(slcsp_list, zip_list):
 
 # This writes the results onto a csv file
 def write_results(slcsp_results):
-    with open('./slcsp_results.csv', mode='w') as slcsp_writer:
+    with open(RESULTS_CSV, mode='w') as slcsp_writer:
         writer = csv.writer(slcsp_writer, delimiter=",")
         writer.writerow(["zipcode", "rate"])
 
