@@ -22,14 +22,15 @@ def get_slcsp_per_rate_area():
               slcsp_list[rate_area_key] = []
               slcsp_list[rate_area_key].append(rate)
 
+            # In this area, we will check if the rate area only has one inetry, in which case, we append the rate
             elif len(slcsp_list[rate_area_key]) == 1:
                 if rate < slcsp_list[rate_area_key][0]:
                     slcsp_list[rate_area_key].insert(0, rate)
                 else:
                     slcsp_list[rate_area_key].append(rate)
 
+            # This updates the rate areas' 2 lowest rates.
             elif len(slcsp_list[rate_area_key]) > 1:
-                # slcsp_list[rate_area_key].insert(1, rate)
                 if rate < slcsp_list[rate_area_key][0]:
                     slcsp_list[rate_area_key].insert(0, rate)
                     del slcsp_list[rate_area_key][-1]
@@ -38,6 +39,7 @@ def get_slcsp_per_rate_area():
                     del slcsp_list[rate_area_key][-1]
     return slcsp_list
 
+# This processes the zips.csv file and assigns all the rate areas allocated to a zip
 def get_rate_area_zip():
     zip_list = dict()
     with open('./zips.csv') as csv_file:
@@ -57,6 +59,7 @@ def get_rate_area_zip():
     
     return zip_list
 
+# This method makes the actual matching of zipcode and geetting the second lowest rate for an arae
 def get_slcsp(slcsp_list, zip_list):
     zip_results = []
     with open('./slcsp.csv') as csv_file:
@@ -87,6 +90,7 @@ def get_slcsp(slcsp_list, zip_list):
 
     return zip_results
 
+# This writes the results onto a csv file
 def write_results(slcsp_results):
     with open('./slcsp_results.csv', mode='w') as slcsp_writer:
         writer = csv.writer(slcsp_writer, delimiter=",")
